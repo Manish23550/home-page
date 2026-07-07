@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Sales Dashboard</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f4f5f7; color: #2C2C2A; padding: 24px; }
+h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
+.subtitle { font-size: 13px; color: #888; margin-bottom: 20px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.kpi { background: #fff; border-radius: 10px; padding: 16px 18px; border: 0.5px solid #e0dfd8; }
+.kpi-label { font-size: 12px; color: #888; margin-bottom: 5px; }
+.kpi-value { font-size: 24px; font-weight: 500; }
+.kpi-sub { font-size: 12px; color: #aaa; margin-top: 3px; }
+.charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.charts-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.card { background: #fff; border-radius: 12px; padding: 18px; border: 0.5px solid #e0dfd8; }
+.card-title { font-size: 13px; font-weight: 500; margin-bottom: 12px; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; font-size: 11px; color: #666; }
+.leg-item { display: flex; align-items: center; gap: 5px; }
+.leg-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.sub-label { font-size: 12px; color: #888; margin-bottom: 8px; }
+footer { text-align: center; font-size: 11px; color: #aaa; margin-top: 24px; }
+</style>
+</head>
+<body>
+
+<h1>Car Sales Dashboard</h1>
+<p class="subtitle">July 2025 &nbsp;|&nbsp; All branches &nbsp;|&nbsp; 210 transactions</p>
+
+<div class="kpi-grid">
+  <div class="kpi">
+    <div class="kpi-label">Total Revenue</div>
+    <div class="kpi-value">SAR 30.1M</div>
+    <div class="kpi-sub">210 transactions</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Avg Sale Value</div>
+    <div class="kpi-value">SAR 143.4K</div>
+    <div class="kpi-sub">After discount</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Avg Discount</div>
+    <div class="kpi-value">SAR 2,484</div>
+    <div class="kpi-sub">1.7% of sale amount</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Avg Processing Time</div>
+    <div class="kpi-value">2.8 days</div>
+    <div class="kpi-sub">Range: 1–5 days</div>
+  </div>
+</div>
+
+<div class="charts-row">
+  <div class="card">
+    <div class="card-title">Revenue by branch</div>
+    <div class="legend">
+      <span class="leg-item"><span class="leg-sq" style="background:#378ADD"></span>Jeddah SAR 11.0M</span>
+      <span class="leg-item"><span class="leg-sq" style="background:#1D9E75"></span>Dammam SAR 10.5M</span>
+      <span class="leg-item"><span class="leg-sq" style="background:#D85A30"></span>Riyadh SAR 8.6M</span>
+    </div>
+    <div style="position:relative;width:100%;height:200px;">
+      <canvas id="branchChart"></canvas>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Revenue by car brand</div>
+    <div class="legend">
+      <span class="leg-item"><span class="leg-sq" style="background:#7F77DD"></span>Hyundai 41.7%</span>
+      <span class="leg-item"><span class="leg-sq" style="background:#1D9E75"></span>Toyota 40.8%</span>
+      <span class="leg-item"><span class="leg-sq" style="background:#EF9F27"></span>Kia 17.4%</span>
+    </div>
+    <div style="position:relative;width:100%;height:200px;">
+      <canvas id="brandChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="charts-row">
+  <div class="card">
+    <div class="card-title">Top 5 car models by revenue</div>
+    <div style="position:relative;width:100%;height:220px;">
+      <canvas id="modelChart"></canvas>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Daily revenue trend (July 2025)</div>
+    <div style="position:relative;width:100%;height:220px;">
+      <canvas id="trendChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="charts-row-3">
+  <div class="card">
+    <div class="card-title">Payment type</div>
+    <div class="legend">
+      <span class="leg-item"><span class="leg-sq" style="background:#378ADD"></span>Finance 63.8%</span>
+      <span class="leg-item"><span class="leg-sq" style="background:#D85A30"></span>Cash 36.2%</span>
+    </div>
+    <div style="position:relative;width:100%;height:160px;"><canvas id="payChart"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Lead source</div>
+    <div class="legend">
+      <span class="leg-item"><span class="leg-sq" style="background:#378ADD"></span>Website</span>
+      <span class="leg-item"><span class="leg-sq" style="background:#1D9E75"></span>Walk-in</span>
+      <span class="leg-item"><span class="leg-sq" style="background:#7F77DD"></span>Referral</span>
+      <span class="leg-item"><span class="leg-sq" style="background:#EF9F27"></span>Instagram</span>
+    </div>
+    <div style="position:relative;width:100%;height:160px;"><canvas id="leadChart"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Sales channel</div>
+    <div class="legend">
+      <span class="leg-item"><span class="leg-sq" style="background:#378ADD"></span>Online 53.4%</span>
+      <span class="leg-item"><span class="leg-sq" style="background:#D85A30"></span>Branch 46.6%</span>
+    </div>
+    <div style="position:relative;width:100%;height:160px;"><canvas id="chanChart"></canvas></div>
+  </div>
+</div>
+
+<div class="charts-row">
+  <div class="card">
+    <div class="card-title">Top employees by revenue</div>
+    <div style="position:relative;width:100%;height:280px;">
+      <canvas id="empChart"></canvas>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Customer type &amp; finance approval</div>
+    <div class="two-col" style="height:280px;">
+      <div>
+        <div class="sub-label">New vs existing</div>
+        <div class="legend">
+          <span class="leg-item"><span class="leg-sq" style="background:#7F77DD"></span>New 52.4%</span>
+          <span class="leg-item"><span class="leg-sq" style="background:#1D9E75"></span>Existing 47.6%</span>
+        </div>
+        <div style="position:relative;width:100%;height:210px;"><canvas id="custChart"></canvas></div>
+      </div>
+      <div>
+        <div class="sub-label">Finance approval status</div>
+        <div class="legend">
+          <span class="leg-item"><span class="leg-sq" style="background:#1D9E75"></span>Approved 67.2%</span>
+          <span class="leg-item"><span class="leg-sq" style="background:#EF9F27"></span>Pending 32.8%</span>
+        </div>
+        <div style="position:relative;width:100%;height:210px;"><canvas id="apprChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>Car Sales Dashboard &nbsp;|&nbsp; Data: Professional_Car_Sales_Dataset_30M_Full.xlsx &nbsp;|&nbsp; July 2025</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const sar = v => 'SAR ' + (v/1e6).toFixed(2) + 'M';
+const sarK = v => 'SAR ' + (v/1000).toFixed(1) + 'K';
+const gridColor = 'rgba(0,0,0,0.06)';
+const textColor = '#888';
+
+Chart.defaults.font.family = 'Arial, sans-serif';
+Chart.defaults.color = textColor;
+
+new Chart(document.getElementById('branchChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Jeddah','Dammam','Riyadh'],
+    datasets: [{ data: [11023648,10499098,8591061], backgroundColor: ['#378ADD','#1D9E75','#D85A30'], borderRadius: 4 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => sar(ctx.raw) } } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: { color: gridColor }, ticks: { callback: v => 'SAR '+(v/1e6).toFixed(0)+'M' } }
+    }
+  }
+});
+
+new Chart(document.getElementById('brandChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Hyundai','Toyota','Kia'],
+    datasets: [{ data: [12569683,12304867,5239257], backgroundColor: ['#7F77DD','#1D9E75','#EF9F27'], borderWidth: 0 }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, cutout: '62%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => sar(ctx.raw) } } } }
+});
+
+new Chart(document.getElementById('modelChart'), {
+  type: 'bar',
+  data: {
+    labels: ['KIA K5','Toyota Corolla','Hyundai Tucson','Toyota Camry','Hyundai Sonata'],
+    datasets: [{ data: [5239257,6031314,6168213,6273553,6401470], backgroundColor: ['#EF9F27','#1D9E75','#7F77DD','#1D9E75','#7F77DD'], borderRadius: 4 }]
+  },
+  options: {
+    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => sar(ctx.raw) } } },
+    scales: {
+      x: { grid: { color: gridColor }, ticks: { callback: v => 'SAR '+(v/1e6).toFixed(1)+'M' } },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+const dayRevs = [992677,1001795,966451,1028160,1001754,1000272,979520,1046187,1009681,982861,994209,967602,991285,1010053,1037161,997508,1019747,1033221,1007789,997802,992944,1049077,1034875,992745,1019359,1032192,975323,970353,1004108,977096];
+new Chart(document.getElementById('trendChart'), {
+  type: 'line',
+  data: {
+    labels: Array.from({length:30},(_,i)=>i+1),
+    datasets: [{ label: 'Daily revenue', data: dayRevs, borderColor: '#378ADD', backgroundColor: 'rgba(55,138,221,0.08)', fill: true, tension: 0.35, pointRadius: 2, pointBackgroundColor: '#378ADD' }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => sarK(ctx.raw) } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { maxTicksLimit: 10 } },
+      y: { grid: { color: gridColor }, ticks: { callback: v => sarK(v) }, min: 900000, max: 1100000 }
+    }
+  }
+});
+
+new Chart(document.getElementById('payChart'), {
+  type: 'doughnut',
+  data: { labels: ['Finance','Cash'], datasets: [{ data: [134,76], backgroundColor: ['#378ADD','#D85A30'], borderWidth: 0 }] },
+  options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { display: false } } }
+});
+
+new Chart(document.getElementById('leadChart'), {
+  type: 'doughnut',
+  data: { labels: ['Website','Walk-In','Referral','Instagram'], datasets: [{ data: [57,54,50,49], backgroundColor: ['#378ADD','#1D9E75','#7F77DD','#EF9F27'], borderWidth: 0 }] },
+  options: { responsive: true, maintainAspectRatio: false, cutout: '55%', plugins: { legend: { display: false } } }
+});
+
+new Chart(document.getElementById('chanChart'), {
+  type: 'doughnut',
+  data: { labels: ['Online','Branch'], datasets: [{ data: [112,98], backgroundColor: ['#378ADD','#D85A30'], borderWidth: 0 }] },
+  options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { display: false } } }
+});
+
+new Chart(document.getElementById('empChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Mohammed','Sarah','Fahad','Yasser','Ahmed','Huda','Abdullah','Noor','Lama'],
+    datasets: [{ data: [2292926,3117363,3180772,3279947,3295409,3323691,3573617,3895460,4154622], backgroundColor: '#7F77DD', borderRadius: 4 }]
+  },
+  options: {
+    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => sarK(ctx.raw) } } },
+    scales: {
+      x: { grid: { color: gridColor }, ticks: { callback: v => sarK(v) } },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+new Chart(document.getElementById('custChart'), {
+  type: 'doughnut',
+  data: { labels: ['New','Existing'], datasets: [{ data: [110,100], backgroundColor: ['#7F77DD','#1D9E75'], borderWidth: 0 }] },
+  options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { display: false } } }
+});
+
+new Chart(document.getElementById('apprChart'), {
+  type: 'doughnut',
+  data: { labels: ['Approved','Pending'], datasets: [{ data: [90,44], backgroundColor: ['#1D9E75','#EF9F27'], borderWidth: 0 }] },
+  options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { display: false } } }
+});
+</script>
+</body>
+</html>
